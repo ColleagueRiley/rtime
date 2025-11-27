@@ -83,7 +83,7 @@ RT_API void rt_setTime(double time); /*!< set timer in seconds */
  * @brief Retrieves delta time between the setTime value and the current time in seconds
  * @return the time in seconds
 */
-RT_API double rt_getTime(void);/
+RT_API double rt_getTime(void);
 
 /**!
  * @brief Retrieves delta time between the setTime value and the current time in nanoseconds
