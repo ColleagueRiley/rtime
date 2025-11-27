@@ -1,40 +1,18 @@
 name: Linux
 
 on:
-
-  workflow_dispatch:
   push:
-    paths:
-      - 'rtime.h'
     branches:
       - main
   pull_request:
-    paths:
-      - '**'
-      - 'examples/**'
-      - '.github/workflows/linux.yml'
+    branches:
+      - main
   release:
     types: [published]
 
-permissions:
-  contents: read
-
 jobs:
   build:
-    permissions:
-      contents: write  # for actions/upload-release-asset to upload release asset
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      max-parallel: 1
-      matrix:
-        bits: [64]
-        include:
-        - bits: 64
-          ARCH: "x86_64"
-          ARCH_NAME: "amd64"
-          COMPILER_PATH: "/user/bin"
-
     steps:
 
     - name: Setup Environment
@@ -45,9 +23,7 @@ jobs:
     - name: test C++
       run: |
         g++ main.c
-      if: matrix.bits == 64
 
     - name: Build
       run: |
         gcc main.c
-      if: matrix.bits == 64

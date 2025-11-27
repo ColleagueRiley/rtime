@@ -14,9 +14,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      RELEASE_NAME: RGFW-dev_web_${{ matrix.ARCH_NAME }}
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
