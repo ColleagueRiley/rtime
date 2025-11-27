@@ -1,0 +1,84 @@
+name: Windows
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'rtime.h'
+      - '.github/workflows/windows.yml'
+    branches:
+      - main
+  pull_request:
+    paths:
+      - '**'
+      - 'examples/**'
+      - '.github/workflows/windows.yml'
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    permissions:
+      contents: write  # for actions/upload-release-asset to upload release asset
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        compiler: [mingw-w64, msvc16]
+        bits: [64]
+        include:
+        - compiler: mingw-w64
+          bits: 64
+          ARCH: "x86_64"
+          WINDRES_ARCH: pe-x86-64
+        - compiler: msvc16
+          bits: 64
+          ARCH: "x86_64"
+          WINDRES_ARCH: pe-x86-64
+        - compiler: zig
+          bits: 64
+          ARCH: "x86_64"
+          WINDRES_ARCH: pe-x86-64
+
+    steps:
+
+    - name: test C++
+      run: |
+        g++ main.c
+      if: matrix.bits == 64 && matrix.compiler == 'mingw-w64'
+
+    # Setup MSBuild.exe path if required
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+      if: matrix.compiler == 'msvc16'
+
+    - name: Add msvc
+      uses: ilammy/msvc-dev-cmd@v1
+      if: matrix.compiler == 'msvc16'
+
+    - name: Build app for release
+      run: |
+        set "vs_path=%ProgramFiles%\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
+      if: matrix.compiler == 'msvc16'
+
+    - name: Build Library (MSVC16 64bit)
+      run: |
+        windres.exe --version
+        cl main.c
+      shell: cmd
+      if: |
+        matrix.compiler == 'msvc16' &&
+        matrix.bits == 64
+
+    - name: Build Library (MinGW-w64 64bit)
+      run: |
+        ${{ matrix.ARCH }}-w64-mingw32-gcc.exe --version
+        gcc main.c
+      shell: cmd
+      if: |
+        matrix.compiler == 'mingw-w64' &&
+        matrix.bits == 64
