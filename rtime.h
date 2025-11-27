@@ -156,7 +156,7 @@ void rt_sleep(uint64_t ms) {
 #ifdef RT_WINDOWS
 	Sleep((uint32_t)ms);
 #elif defined(RT_WASM)
-	emscripten_sleep(milisecond);
+	emscripten_sleep(ms);
 #else
 	struct timespec time;
 	time.tv_sec = 0;
