@@ -22,6 +22,7 @@ jobs:
 
     - name: test C++
       run: |
+        ls
         g++ main.c
 
     - name: Build
