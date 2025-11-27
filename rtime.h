@@ -73,13 +73,41 @@
 
 #include <stdint.h>
 
+/**!
+ * @brief Set starting time for getTime to use
+ * @return the time in seconds
+*/
 RT_API void rt_setTime(double time); /*!< set timer in seconds */
-RT_API double rt_getTime(void); /*!< get time in seconds since rt_setTime, which ran when the first window is open  */
-RT_API uint64_t rt_getTimeNS(void); /*!< get time in nanoseconds rt_setTime, which ran when the first window is open */
 
-RT_API void rt_sleep(uint64_t milisecond); /*!< sleep for a set time */
-RT_API uint64_t rt_getTimerValue(void); /*!< get API timer value */
-RT_API uint64_t rt_getTimerFreq(void); /*!< get API time freq */
+/**!
+ * @brief Retrieves delta time between the setTime value and the current time in seconds
+ * @return the time in seconds
+*/
+RT_API double rt_getTime(void);/
+
+/**!
+ * @brief Retrieves delta time between the setTime value and the current time in nanoseconds
+ * @return the time in nanosecnds
+*/
+RT_API uint64_t rt_getTimeNS(void);
+
+/**!
+ * @brief sleep, pausing the thread for a given amount of time
+ * @return time length of the pause in miliseconds
+*/
+RT_API void rt_sleep(uint64_t milisecond);
+
+/**!
+ * @brief Retrieves get source API timer value.
+ * @return The source API timer value.
+*/
+RT_API uint64_t rt_getTimerValue(void);
+
+/**!
+ * @brief Retrieves the source api time frequency
+ * @return The source API timer frequency.
+*/
+RT_API uint64_t rt_getTimerFreq(void);
 
 #endif
 
