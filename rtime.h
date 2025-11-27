@@ -62,6 +62,18 @@
 	#define RT_API inline
 #endif
 
+#ifdef __EMSCRIPTEN__
+	#define RT_WASM
+#endif
+
+#if defined(_WIN32) && !defined(RT_UNIX) && !defined(RT_WASM)
+	#define RT_WINDOWS
+#elif !defined(RT_UNIX) && defined(__unix__)  && !defined(RT_WASM) && !defined(__APPLE__)
+	#define RT_UNIX
+#elif defined(__APPLE__) && !defined(RT_UNIX)  && !defined(RT_WASM)
+	#define RT_MACOS
+#endif
+
 #if defined(__cplusplus) && !defined(__EMSCRIPTEN__)
 	extern "C" {
 #endif
