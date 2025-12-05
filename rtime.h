@@ -170,10 +170,9 @@ uint64_t rt_getTimerFreq(void) {
 #ifdef RT_WINDOWS
 	static uint64_t frequency = 0;
 	if (frequency == 0) QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
-
 	return frequency;
 #elif defined(RT_WASM)
-	return emscripten_get_now() * 1e+6;
+	return (uint64_t)1000;
 #elif defined(RT_MACOS)
 	static uint64_t freq = 0;
 	if (freq == 0) {
@@ -183,6 +182,20 @@ uint64_t rt_getTimerFreq(void) {
 	}
 
 	return freq;
+#else
+	return 1000000000LLU;
+#endif
+}
+
+uint64_t rt_getTimerValue(void) {
+#ifdef RT_WINDOWS
+	uint64_t value;
+	QueryPerformanceCounter((LARGE_INTEGER*)&value);
+	return value;
+#elif defined(RT_WASM)
+	return emscripten_get_now() * 1e+6;
+#elif defined(RT_MACOS)
+	return (uint64_t)mach_absolute_time();
 #else
 	static int32_t clock = -1;
 	if (clock == -1) {
@@ -198,20 +211,6 @@ uint64_t rt_getTimerFreq(void) {
 	struct timespec ts;
 	clock_gettime(CLOCK_REALTIME, &ts);
     return (uint64_t)ts.tv_sec * rt_getTimerFreq() + (uint64_t)ts.tv_nsec;
-#endif
-}
-
-uint64_t rt_getTimerValue(void) {
-#ifdef RT_WINDOWS
-	uint64_t value;
-	QueryPerformanceCounter((LARGE_INTEGER*)&value);
-	return value;
-#elif defined(RT_WASM)
-	return (uint64_t)1000;
-#elif defined(RT_MACOS)
-	return (uint64_t)mach_absolute_time();
-#else
-	return 1000000000LLU;
 #endif
 }
 
