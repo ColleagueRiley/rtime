@@ -207,7 +207,6 @@ uint64_t rt_getTimerValue(void) {
 		else
 		#endif
 			clock = CLOCK_REALTIME;
-		#endif
 	}
 
 	struct timespec ts;
