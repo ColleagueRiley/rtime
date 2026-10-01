@@ -210,7 +210,7 @@ uint64_t rt_getTimerValue(void) {
 	}
 
 	struct timespec ts;
-	clock_gettime(CLOCK_REALTIME, &ts);
+	clock_gettime(clock, &ts);
     return (uint64_t)ts.tv_sec * rt_getTimerFreq() + (uint64_t)ts.tv_nsec;
 #endif
 }
