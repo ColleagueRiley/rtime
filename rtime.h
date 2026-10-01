@@ -160,8 +160,8 @@ void rt_sleep(uint64_t ms) {
 	emscripten_sleep(ms);
 #else
 	struct timespec time;
-	time.tv_sec = 0;
-	time.tv_nsec = (long int)((double)ms * 1e+6);
+	time.tv_sec = (long int)(ms / 1000);
+	time.tv_nsec = (long int)((double)(ms % 1000) * 1e+6);
 
 	nanosleep(&time, NULL);
 #endif
